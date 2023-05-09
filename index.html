@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>4択クイズ</title>
+</head>
+<body>
+
+  <h2>4択クイズ</h2>
+  <div id="quizForm">
+    <span>Q</span><span id="question"></span>
+  </div>
+  <p><input type="radio" name="answer" id="radio0" onclick="checkZero()">
+    <span></span></p>
+  <p><input type="radio" name="answer" id="radio1" onclick="checkZero()">
+    <span></span></p>
+  <p><input type="radio" name="answer" id="radio2" onclick="checkZero()">
+    <span></span></p>
+  <p><input type="radio" name="answer" id="radio3" onclick="checkZero()">
+    <span></span></p>
+  <div><p id="greeting">4択クイズを始めましょう</p>
+    <p></p>
+  </div>
+  <div>
+    <button id="startNext" onclick="runQuiz()">START</button>
+  </div>
+
+  <script>
+    let radio0 =document.getElementById("radio0");
+    let radio1 =document.getElementById("radio1");
+    let radio2 =document.getElementById("radio2");
+    let radio3 =document.getElementById("radio3");
+    let question =document.getElementById("question");
+    let greeting =document.getElementById("greeting");
+    let startNext =document.getElementById("startNext");
+
+    let qas =[
+      {question:"小説「戦争と平和」を書いたのは誰でしょう。", ans0:"ドストエフスキー", ans1:"トルストイ", ans2:"ツルゲーネフ", ans3:"チューホフ", answer:1},
+      {question:"最も比重の大きい金属は何でしょう。", ans0:"ニッケル", ans1:"チタン", ans2:"ガリウム", ans3:"マンガン", answer:0},
+      {question:"任意の整数値を上限とする数値の集合から素数を拾い出す方法は以下のどれですか。", ans0:"マックスウェルの悪魔", ans1:"コロンブスの卵", ans2:"ミリカンの油滴", ans3:"エラトステネスの節", answer:3},
+      {question:"次の都市の中で最も北にあるのはどれでしょう。", ans0:"アンカレジ", ans1:"ハバロフスク", ans2:"レイキャビク", ans3:"ハノーバー", answer:1}
+    ];
+
+    let counter = -1;
+    let success = 0;
+
+    function nextQuestion(counter){
+      let qa = qas[counter];
+      question.innerHTML =(counter + 1) + "." + qa.question;
+      freeAllRadioButtons();
+      radio0.nextElementSibling.innerHTML = "1." + qa.ans0;
+      radio1.nextElementSibling.innerHTML = "2." + qa.ans1;
+      radio2.nextElementSibling.innerHTML = "3." + qa.ans2;
+      radio3.nextElementSibling.innerHTML = "4." + qa.ans3;
+      greeting.innerHTML = ".";
+      hideElement(startNext, true);
+    }
+    function checkZero(){judge(0);}
+    function checkOne(){judge(1);}
+    function checkTwo(){judge(2);}
+    function checkThree(){judge(3);}
+
+    function runQuiz(){
+      let quizForm = document.getElementById("quizForm");
+      if(counter == -1){
+        hideElement(quizForm, false);
+        greeting.innerHTML = "";
+      }
+      if(counter < qas.length - 1){
+        nextQuestion(++counter);
+      }else{
+        hideElement(quizForm, true);
+        hideElement(startNext, true);
+        greeting.innerHTML = "お疲れ様でした！"<br>"正解率は" + success + "/" + qas.length;
+        greeting.nextElementSibling.innerHTML = "";
+      }
+    }
+    function judge(selected){
+      let rightAnswer = (qas[counter]).answer;
+      if(selected == rightAnswer){
+        greeting.innerHTML = "正解！";
+        success++;
+      }else{
+        greeting.innerHTML = "残念！正解は" +(rightAnswer + 1)+ "番です";
+      }
+      greeting.nextElementSibling.innerHTML = "正解" + success + "/" + qas.length;
+      hideElement(startNext, false);
+      startNext.innerHTML = "NEXT";
+      disableALLRadioButtons(true);
+    }
+    function hideElement(elm, b){
+      if(b == true){
+        elm.style.display = "none";
+      }else{
+        elm.style.display = "inline";
+      }
+    }
+    function disableALLRadioButtons(b){
+      radio0.disabled = b; radio1.disabled = b;
+      radio2.disabled = b; radio3.disabled = b;
+    }
+    function freeAllRadioButtons(){
+      radio0.checked = false; radio1.checked = false;
+      radio2.checked = false; radio3.checked = false;
+      disableALLRadioButtons(false);
+    }
+  </script>
+</body>
+</html>
